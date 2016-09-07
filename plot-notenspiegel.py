@@ -2,30 +2,54 @@
 # a bar plot with errorbars
 import numpy as np
 import matplotlib.pyplot as plt
+import json
+import os
+import re
 
-N = 5
-menMeans = (20, 35, 30, 35, 27)
-menStd = (2, 3, 4, 1, 2)
+OUTPUT_DIR = 'output'
 
-ind = np.arange(N)  # the x locations for the groups
-width = 0.35       # the width of the bars
+with open('grades.json', 'r') as f:
+    grades = json.load(f)
 
-fig, ax = plt.subplots()
-#rects1 = ax.bar(ind, menMeans, width, color='r', yerr=menStd)
 
-womenMeans = (25, 32, 34, 20, 25)
-womenStd = (3, 5, 2, 3, 3)
-#rects2 = ax.bar(ind + width, womenMeans, width, color='y', yerr=womenStd)
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 
-def autolabel(rects):
-    # attach some text labels
+
+def autolabel_bars(rects):
     for rect in rects:
         height = rect.get_height()
-        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+        plt.text(rect.get_x() + rect.get_width()/2., 0.5 + height,
                 '%d' % int(height),
                 ha='center', va='bottom')
 
-#autolabel(rects1)
-#autolabel(rects2)
+def sanitize_title_for_filename(title):
+    title = title.replace(' ', '-').replace(':', '-').lower()
+    return title.encode('utf-8')
 
-plt.show()
+def print_notenspiegel_plot(grade):
+    plt.cla()
+    plt.clf()
+    plt.style.use('seaborn-whitegrid')
+
+    title = grade['title']
+    sanitized_title = sanitize_title_for_filename(title)
+    notenspiegel = grade['notenspiegel']
+    ind = np.arange(len(notenspiegel))
+    ind = np.array([1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, 5.0])
+    width = 0.20
+    rects1 = plt.bar(ind, notenspiegel, width)
+    autolabel_bars(rects1)
+    plt.xticks(0.1 + ind, ind)
+
+    plt.xlabel("grades")
+    plt.ylabel("# students")
+    plt.grid(False)
+    plt.title(title)
+    plt.savefig('{}/{}.png'.format(OUTPUT_DIR, sanitized_title), dpi=300)
+
+for grade in grades:
+    print_notenspiegel_plot(grade)
+
+
+
