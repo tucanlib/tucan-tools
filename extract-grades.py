@@ -93,7 +93,7 @@ def get_notenspiegel(link):
     durschschnitt_regexp = re.compile(r'Durchschnitt\: (.*?)<\/div>')
     html = browser.get(link).text
     try:
-        notenspiegel = [int(x.strip()) for x in notenspiegel_regexp.findall(html)[1:]]
+        notenspiegel = [0 if x.strip() == '---' else int(x.strip()) for x in notenspiegel_regexp.findall(html)[1:]]
         avg = get_avg_from_notenspiegel(notenspiegel)
         return {
             "notenspiegel": notenspiegel,
