@@ -3,7 +3,7 @@
 
 Outputs the difference of your grades to the grades of the others.
 
-Caveat: Only exports grades where the Notenspiegel is available. This is by choice not accident, so technically no caveat but will be felt as one.
+Caveat: Only exports grades where the Notenspiegel is available. This is by choice, not accident - so technically no caveat but will be felt as one.
 
 ```bash
 # Needed: python3 and pip3 or pip.exe or whatever
