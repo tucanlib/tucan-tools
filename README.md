@@ -1,11 +1,17 @@
-# :)
-```
-npm install
-node get-grades.js
-```
-You have to enter your tucan credentials (Yes, yes, they are safe with me :smirk: ).
+# Export your grades
+... and start comparing yourself to other students. It's a totally sane thing to do.
 
-Your grades will be in `grades.json` and a screenshot named `grades.png`.
+Outputs the difference of your grades to the grades of the others.
 
-### Will this script make me happy in some way or make my life easier?
-No, it doesn't. Stop searching for meaning in the wrong places.
+```bash
+# Needed: python3 and pip3
+pip3 install mechanicalsoup
+pip3 install argparse
+./extract-grades.py TUCAN_USERNAME PASSWORD
+# or
+python3 extract-grades.py TUCAN_USERNAME PASSWORD
+```
+
+## TODO:
+- Add plotting? Because why not
+- Get better grades...
