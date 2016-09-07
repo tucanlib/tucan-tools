@@ -108,7 +108,7 @@ for grade_data in grades:
     title = grade_data['title']
     diff = avg - grade
     diffs.append(diff)
-    print("grade: {}\tavg: {}\tdiff: {}\t({})".format(grade, avg, round(diff, 1), title))
+    print("grade: {}\tavg: {}\tdiff: {}\t({})".format(grade, round(avg, 2), round(diff, 1), title))
 
 print('\n' * 3)
 print('#Courses: {}'.format(len(grades)))
