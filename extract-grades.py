@@ -72,17 +72,19 @@ def get_notenspiegel(link):
     notenspiegel_regexp = re.compile(r'<td class="tbdata">(.*?)<\/td>')
     durschschnitt_regexp = re.compile(r'Durchschnitt\: (.*?)<\/div>')
     html = browser.get(link).text
-    if len(notenspiegel_regexp.findall(html)) == 0:
+    try:
+        notenspiegel = [int(x.strip()) for x in notenspiegel_regexp.findall(html)[1:]]
+        avg = get_avg_from_notenspiegel(notenspiegel)
+        return {
+            "notenspiegel": notenspiegel,
+            "avg": avg
+        }
+    except:
         return None
-    notenspiegel = [int(x.strip()) for x in notenspiegel_regexp.findall(html)[1:]]
-    avg = get_avg_from_notenspiegel(notenspiegel)
-    return {
-        "notenspiegel": notenspiegel,
-        "avg": avg
-    }
 
 def sanitize_title(title):
-    return re.sub(r'\d{2}-\d{2}-\d{4}(?:-iv)?', '', title.split('<br>')[0].replace('\n', ' ').replace('&nbsp;', ' ').strip()).strip()
+    title = title.split('<br>')[0].replace('\n', ' ').replace('&nbsp;', ' ').strip()
+    return re.sub(r'\d{2}-\d{2}-\d{4}(?:-iv)?', '', title).strip()
 
 grades = []
 for grade_data in grade_tds:
