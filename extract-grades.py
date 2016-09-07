@@ -43,6 +43,7 @@ redirected_url = "=".join(login_page.headers['REFRESH'].split('=')[1:])
 
 start_page = browser.get(BASE_URL + redirected_url)
 start_page = browser.get(get_redirection_link(start_page))
+
 ergebnisse_page_link = BASE_URL + start_page.soup.select('li[title="Prüfungsergebnisse"] a')[0].attrs['href']
 ergebnisse_page = browser.get(ergebnisse_page_link)
 
@@ -71,6 +72,8 @@ def get_notenspiegel(link):
     notenspiegel_regexp = re.compile(r'<td class="tbdata">(.*?)<\/td>')
     durschschnitt_regexp = re.compile(r'Durchschnitt\: (.*?)<\/div>')
     html = browser.get(link).text
+    if len(notenspiegel_regexp.findall(html)) == 0:
+        return None
     notenspiegel = [int(x.strip()) for x in notenspiegel_regexp.findall(html)[1:]]
     avg = get_avg_from_notenspiegel(notenspiegel)
     return {
@@ -85,6 +88,8 @@ grades = []
 for grade_data in grade_tds:
     notenspiegel_link = BASE_URL + grade_data[-1].find('a').attrs['href']
     notenspiegel_data = get_notenspiegel(notenspiegel_link)
+    if notenspiegel_data is None:
+        continue
     grades.append({
         "originalTitle": grade_data[0].text.strip(),
         "title": sanitize_title(str(grade_data[0]).split('<br/>')[0].replace('<td>', '')),
