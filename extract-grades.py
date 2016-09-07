@@ -111,7 +111,7 @@ for grade_data in grade_tds:
     notenspiegel_link = BASE_URL + grade_data[-1].find('a').attrs['href']
     notenspiegel_data = get_notenspiegel(notenspiegel_link)
     if notenspiegel_data is None:
-        print("Failed to get notenspiegel for: {}".format(grade_data[0].text.replace('\n', ' ')strip()))
+        print("Failed to get notenspiegel for: {}".format(grade_data[0].text.replace('\n', ' ').strip()))
         continue
     grades.append({
         "originalTitle": grade_data[0].text.strip(),
