@@ -38,9 +38,14 @@ def print_notenspiegel_plot(grade):
     ind = np.arange(len(notenspiegel))
     ind = np.array([1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, 5.0])
     width = 0.20
-    rects1 = plt.bar(ind, notenspiegel, width)
-    autolabel_bars(rects1)
+    bars = plt.bar(ind, notenspiegel, width)
+    autolabel_bars(bars)
     plt.xticks(0.1 + ind, ind)
+
+    # Nice naming, eh?
+    for (index, grade_) in enumerate(ind):
+        if grade['grade'] == grade_:
+            bars[index].set_color('g')
 
     plt.xlabel("grades")
     plt.ylabel("# students")
