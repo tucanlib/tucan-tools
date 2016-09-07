@@ -18,6 +18,8 @@ parser.add_argument("username")
 parser.add_argument("password")
 args = parser.parse_args()
 
+# Lasciate ogni speranza, oh voi ch'entrate
+
 SELECTORS = {
     "LoginUser": '#field_user',
     "LoginPass": '#field_pass',
@@ -33,11 +35,9 @@ login_page = browser.get(get_redirection_link(login_page))
 login_page = browser.get(get_redirection_link(login_page))
 login_form = login_page.soup.select(SELECTORS['LoginForm'])[0]
 
-# specify username and password
 login_form.select(SELECTORS['LoginUser'])[0]['value'] = args.username
 login_form.select(SELECTORS['LoginPass'])[0]['value'] = args.password
 
-# submit form
 login_page = browser.submit(login_form, login_page.url)
 redirected_url = "=".join(login_page.headers['REFRESH'].split('=')[1:])
 
@@ -47,6 +47,7 @@ start_page = browser.get(get_redirection_link(start_page))
 ergebnisse_page_link = BASE_URL + start_page.soup.select('li[title="Prüfungsergebnisse"] a')[0].attrs['href']
 ergebnisse_page = browser.get(ergebnisse_page_link)
 
+# Straight outta tucan skripts.js
 def get_link_for_ergebnisse(dispatcher, applicationName, programName, sessionNo, menuId, args):
     return dispatcher + "?APPNAME=" + applicationName + "&PRGNAME=" + programName + "&ARGUMENTS=-N" + sessionNo + ",-N" + menuId + ',' + args
 
@@ -63,8 +64,27 @@ for grade in grades:
         continue
     grade_tds.append(tds)
 
+
+
+
+
+
+
+
+
+
+### Parsing is done now - now the relaxing part starts...
+
+
+
+
+
+
+
+
+
 def get_avg_from_notenspiegel(notenspiegel):
-    grades = [1.0,1.3,1.7,2.0,2.3,2.7,3.0,3.3,3.7,4.0,5.0]
+    grades = [1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, 5.0]
     n = [x * grades[index] for (index, x) in enumerate(notenspiegel)]
     return sum(n) / sum(notenspiegel)
 
@@ -91,7 +111,7 @@ for grade_data in grade_tds:
     notenspiegel_link = BASE_URL + grade_data[-1].find('a').attrs['href']
     notenspiegel_data = get_notenspiegel(notenspiegel_link)
     if notenspiegel_data is None:
-        print("Failed to get notenspiegel for: {}".format(grade_data[0].text.strip()))
+        print("Failed to get notenspiegel for: {}".format(grade_data[0].text.replace('\n', ' ',strip()))
         continue
     grades.append({
         "originalTitle": grade_data[0].text.strip(),
