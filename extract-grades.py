@@ -5,11 +5,14 @@ Please don't look further - I wrote this code at deep night, because a friend of
 So this is late night code and will propably stay that way.
 '''
 
-
 import json
 
-with open('grades.json', 'r') as f:
-    grades = json.load(f)
+try:
+    with open('grades.json', 'r') as f:
+        grades = json.load(f)
+except:
+    print('Error retreiving/parsing grades.json. Exiting ungracefully')
+    raise(Exception('Was ist das für 1 Datenhaltung?'))
 
 diffs = []
 for grade_data in grades:

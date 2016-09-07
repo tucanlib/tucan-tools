@@ -115,3 +115,6 @@ for grade_data in grade_tds:
         "notenspiegel": notenspiegel_data['notenspiegel'],
         "avg": notenspiegel_data['avg']
     })
+
+with open('grades.json', 'w+') as f:
+    json.dump(grades, f, indent=4)

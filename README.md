@@ -9,9 +9,9 @@ Caveat: Only exports grades where the Notenspiegel is available. This is by choi
 # Needed: python3 and pip3 or pip.exe or whatever
 pip3 install mechanicalsoup
 pip3 install argparse
-./extract-grades.py TUCAN_USERNAME PASSWORD
-# or
-python3 extract-grades.py TUCAN_USERNAME PASSWORD
+
+python3 get-grades.py TUCAN_USERNAME PASSWORD
+python3 extract-grades.py
 ```
 
 ## TODO:
