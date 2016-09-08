@@ -63,6 +63,8 @@ def get_avg_from_notenspiegel_without_failed(notenspiegel):
 
 def get_avg_from_notenspiegel(notenspiegel):
     n = [x * get_available_grades()[index] for (index, x) in enumerate(notenspiegel)]
+    if sum(notenspiegel) == 0:
+        return -1
     return sum(n) / sum(notenspiegel)
 
 def sanitize_filename(title):

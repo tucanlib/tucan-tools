@@ -10,6 +10,8 @@ for grade_data in grades:
     if grade == 5.0:
         continue
     avg = helper.get_avg_from_notenspiegel(grade_data['notenspiegel'])
+    if avg <= 0:
+        continue
     avg_without_failed = helper.get_avg_from_notenspiegel_without_failed(grade_data['notenspiegel'])
     title = grade_data['title']
     diff = avg - grade
