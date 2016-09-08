@@ -23,3 +23,5 @@ python3 grades_notenspiegel_plotter.py TUCAN_USERNAME PASSWORD
 ## TODO:
 - Get better grades...
 - Remind Micha to install a sane OS where `pip` is not `pip.exe`
+
+![Notenspiegel](screenshot.png)
