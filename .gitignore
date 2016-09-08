@@ -6,5 +6,6 @@ grades.json
 output
 __pycache__
 *.pyc
-user-credentials.txt
+user-credentials*
 user.txt
+user*
