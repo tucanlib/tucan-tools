@@ -69,10 +69,17 @@ def get_grades():
         # The link to the notenspiegel is in the last column of the table
         notenspiegel_link = BASE_URL + grade_data[-1].find('a').attrs['href']
         notenspiegel_data = get_notenspiegel(notenspiegel_link)
+        title = grade_data[0].text.replace('\n', ' ').strip()
         if notenspiegel_data is None:
-            print("Failed to get notenspiegel for: {}".format(grade_data[0].text.replace('\n', ' ').strip()))
+            print("Error retrieving notenspiegel for: {}".format(title))
             continue
-        grade = float(grade_data[2].text.strip().replace(',','.'))
+
+        try:
+            grade = float(grade_data[2].text.strip().replace(',','.'))
+        except:
+            print('Error retrieving grade for: {}'.format(title))
+            continue
+
         sanitized_title = sanitize_title(str(grade_data[0]).split('<br/>')[0].replace('<td>', ''))
         title = grade_data[0].text.strip()
         grades.append({

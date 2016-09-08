@@ -66,8 +66,10 @@ def get_avg_from_notenspiegel(notenspiegel):
     return sum(n) / sum(notenspiegel)
 
 def sanitize_filename(title):
-    title = title.replace(' ', '-').replace(':', '-').lower()
-    return title
+    removestr = ['\t', '\n', '(', ')', ':', '\t', ' ', '/']
+    for s in removestr:
+        title = title.replace(s, '-')
+    return title.lower()
 
 def get_tucan_baseurl():
     return BASE_URL
