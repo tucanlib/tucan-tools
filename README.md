@@ -22,6 +22,8 @@ pip3 install numpy
 python3 grades_notenspiegel_plotter.py TUCAN_USERNAME PASSWORD
 # If there is an error that you need 'tkinter' you have to install 'python-pmw' (Arch Linux)
 # the plots will reside in the newly created output folder
+
+# Once the grades.json got extracted from TuCan, it will be reused whenever possible. So if there are grades/courses missing, just delete the grades.json and try again.
 ```
 
 ## TODO:
