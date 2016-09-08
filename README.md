@@ -24,6 +24,7 @@ python3 grades_notenspiegel_plotter.py
 # (plots will reside in newly created 'output' folder)
 
 # New: exporting the VV is now possible, too:
+pip3 install bs4
 python3 vv_exporter.py
 # (modules.json)
 ```

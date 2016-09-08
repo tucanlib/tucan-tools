@@ -5,13 +5,9 @@ Why does this have to be such a pain :/
 BeautifulSoup and me won't become friends, it's too stubbornly misunderstanding...
 '''
 
-import mechanicalsoup
-import sys
 import re
 import json
 import helper
-import collections
-from pprint import pprint
 from bs4 import BeautifulSoup
 
 BLACKLIST=(
@@ -59,6 +55,7 @@ def sanitize_detail(detail):
     detail_text = re.sub(r'^:', '', detail_text).strip()
     detail_text = re.sub(r'(<br\/>)*$', '', detail_text).strip()
     detail_text = re.sub(r'(<br\/>)*', '', detail_text).strip()
+    detail_text = re.sub(r']$', '', detail_text).strip()
     detail['details'] = detail_text
     return detail
 
