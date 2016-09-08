@@ -21,6 +21,5 @@ python3 grades_notenspiegel_plotter.py TUCAN_USERNAME PASSWORD
 ```
 
 ## TODO:
-- Add plotting? Because why not
 - Get better grades...
 - Remind Micha to install a sane OS where `pip` is not `pip.exe`
