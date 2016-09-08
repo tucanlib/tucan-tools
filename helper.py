@@ -3,6 +3,7 @@ import json
 import os
 import argparse
 import mechanicalsoup
+import getpass
 
 GRADES_JSON = 'grades.json'
 CREDENTIALS_FILE = 'user-credentials.txt'
@@ -18,6 +19,18 @@ def get_user_credentials():
                 "username": contents[0].strip(),
                 "password": contents[1].strip()
             }
+    def ask_user():
+        username = None
+        password = None
+        while username is None:
+            username = input('Tucan Username: ')
+        while password is None:
+            password = getpass.getpass('Tucan Password: ')
+        return {
+            "username": username.strip(),
+            "password": password.strip()
+        }
+
 
     # First try to get the user credentials by file, afterwards by programm arguments
     try:
@@ -25,15 +38,11 @@ def get_user_credentials():
     except:
         pass
 
-    # Get the username/password from the programm args
-    parser = argparse.ArgumentParser(description='Login')
-    parser.add_argument("username")
-    parser.add_argument("password")
-    args = parser.parse_args()
-    return {
-        "username": args.username,
-        "password": args.password
-    }
+    try:
+        return ask_user()
+    except:
+        pass
+    raise(Exception('Could not retreive username/password. Are you doing this on purpose?'))
 
 def get_grades():
     try:

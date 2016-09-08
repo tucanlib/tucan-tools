@@ -1,16 +1,5 @@
 #!/usr/bin/env python3
 
-'''
-Retrieves the grades from tucan (pain!)
-
-Please don't look further - I wrote this code at deep night,
-because a friend of mine (who got his CS bachelor given for free)
-could not get my other script to work :D
-
-So this is late night code and will propably stay that way.
-'''
-
-
 import mechanicalsoup
 import sys
 import re

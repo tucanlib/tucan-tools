@@ -10,9 +10,9 @@ Caveat: Only exports grades where the Notenspiegel is available. This is by choi
 pip3 install mechanicalsoup
 pip3 install argparse
 
-python3 grades_extractor.py TUCAN_USERNAME PASSWORD
-# or you create a file called 'user-credentials.txt' with two lines in it: your username and password (trailing whitespace etc. will be stripped) and then you do:
 python3 grades_extractor.py
+# You will be prompted for your username/password
+# or you can create a file called 'user-credentials.txt' with two lines in it: your username and password (trailing whitespace etc. will be stripped) - then you won't get asked
 
 # grades.json will now hold the grades data
 
