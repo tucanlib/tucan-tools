@@ -17,18 +17,22 @@ if not os.path.exists(OUTPUT_DIR):
 def autolabel_bars(rects):
     for rect in rects:
         height = rect.get_height()
-        plt.text(rect.get_x() + rect.get_width()/2., 0.5 + height,
+        plt.text(rect.get_x() + rect.get_width()/2., 1.02 * height,
                 '%d' % int(height),
                 ha='center', va='bottom')
 
-def create_notenspiegel_plot(grade):
+def get_notenspiegel_index(grade):
+    for (index, grade_) in enumerate(available_grades):
+        if grade == grade_:
+            return index
+    return -1
+
+def plot_notenspiegel(title, notenspiegel):
     plt.cla()
     plt.clf()
     plt.style.use('seaborn-whitegrid')
 
-    title = grade['title']
     sanitized_title = helper.sanitize_filename(title)
-    notenspiegel = grade['notenspiegel']
     ind = np.arange(len(notenspiegel))
     ind = np.array(available_grades)
     width = 0.20
@@ -38,9 +42,9 @@ def create_notenspiegel_plot(grade):
 
     # Nice naming, eh?
     # Color the bar with your grade in green
-    for (index, grade_) in enumerate(ind):
-        if grade['grade'] == grade_:
-            bars[index].set_color('g')
+    notenspiegel_index = get_notenspiegel_index(grade['grade'])
+    if notenspiegel_index != -1:
+        bars[notenspiegel_index].set_color('g')
 
     plt.xlabel("grades")
     plt.ylabel("# students")
@@ -57,5 +61,18 @@ def create_notenspiegel_plot(grade):
     plt.title(title, loc='left')
     plt.savefig('{}/{}.png'.format(OUTPUT_DIR, sanitized_title))
 
+def create_notenspiegel_plot(grade):
+    plot_notenspiegel(grade['title'], grade['notenspiegel'])
+
+#for grade in grades:
+#    create_notenspiegel_plot(grade)
+
+
+notenspiegel = [0] * len(available_grades)
 for grade in grades:
-    create_notenspiegel_plot(grade)
+    grade_ = grade['grade']
+    notenspiegel_index = get_notenspiegel_index(grade['grade'])
+    if notenspiegel_index != -1:
+        notenspiegel[notenspiegel_index] = notenspiegel[notenspiegel_index] + 1
+
+plot_notenspiegel('_NOTENSPIEGEL', notenspiegel)
