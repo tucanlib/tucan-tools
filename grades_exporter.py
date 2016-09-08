@@ -15,37 +15,13 @@ import mechanicalsoup
 import sys
 import re
 import json
+import helper
 
 def get_grades(username, password):
-    BASE_URL = 'https://www.tucan.tu-darmstadt.de'
+    BASE_URL = helper.get_tucan_baseurl()
 
     # Lasciate ogni speranza, oh voi ch'entrate
-
-    SELECTORS = {
-        "LoginUser": '#field_user',
-        "LoginPass": '#field_pass',
-        "LoginForm": '#cn_loginForm'
-    }
-
-    def get_redirection_link(page):
-        return BASE_URL + page.soup.select('a')[2].attrs['href']
-
-    # Login
-    browser = mechanicalsoup.Browser(soup_config={"features":"html.parser"})
-    login_page = browser.get(BASE_URL)
-    # HTML redirects, because why not
-    login_page = browser.get(get_redirection_link(login_page))
-    login_page = browser.get(get_redirection_link(login_page))
-    login_form = login_page.soup.select(SELECTORS['LoginForm'])[0]
-
-    login_form.select(SELECTORS['LoginUser'])[0]['value'] = username
-    login_form.select(SELECTORS['LoginPass'])[0]['value'] = password
-
-    login_page = browser.submit(login_form, login_page.url)
-    redirected_url = "=".join(login_page.headers['REFRESH'].split('=')[1:])
-
-    start_page = browser.get(BASE_URL + redirected_url)
-    start_page = browser.get(get_redirection_link(start_page))
+    (browser, start_page) = helper.log_into_tucan_()
 
     # Prüfungsergebnisse page
     ergebnisse_page_link = BASE_URL + start_page.soup.select('li[title="Prüfungsergebnisse"] a')[0].attrs['href']
