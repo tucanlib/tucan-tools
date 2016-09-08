@@ -17,7 +17,7 @@ import re
 import json
 import helper
 
-def get_grades(username, password):
+def get_grades():
     BASE_URL = helper.get_tucan_baseurl()
 
     # Lasciate ogni speranza, oh voi ch'entrate

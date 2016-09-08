@@ -38,11 +38,9 @@ def get_user_credentials():
 def get_grades():
     try:
         if not os.path.exists(GRADES_JSON):
-            credentials = get_user_credentials()
-            grades = grades_exporter.get_grades(credentials['username'], credentials['password'])
+            grades = grades_exporter.get_grades()
             with open(GRADES_JSON, 'w+') as f:
                 json.dump(grades, f, indent=4)
-
         with open(GRADES_JSON, 'r') as f:
             return json.load(f)
     except:
