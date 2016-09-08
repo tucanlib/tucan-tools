@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import helper
-import json
 
 grades = helper.get_grades()
 
@@ -15,7 +14,6 @@ for grade_data in grades:
 
 print('\n' * 3)
 print('#Courses: {}'.format(len(grades)))
-print('avg diff: {}'.format(round(sum(diffs) / len(diffs), 2)))
-
-with open('grades.json', 'w+') as f:
-    json.dump(grades, f, indent=4)
+# you like?
+avg_of_diff_to_avgs = sum(diffs) / len(diffs)
+print('avg diff: {}'.format(round(avg_of_diff_to_avgs, 2)))

@@ -14,10 +14,6 @@ import re
 import json
 
 # Gets called if this is the __main__ script
-def export():
-    with open('grades.json', 'w+') as f:
-        json.dump(get_grades(), f, indent=4)
-
 def get_login_data():
     parser = argparse.ArgumentParser(description='Login')
     parser.add_argument("username")
@@ -79,17 +75,15 @@ def get_grades():
 
     ### Parsing is done now - now the relaxing part starts...
 
-
     def get_avg_from_notenspiegel(notenspiegel):
         grades = [1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, 5.0]
         n = [x * grades[index] for (index, x) in enumerate(notenspiegel)]
         return sum(n) / sum(notenspiegel)
 
     def get_notenspiegel(link):
-        notenspiegel_regexp = re.compile(r'<td class="tbdata">(.*?)<\/td>')
-        durschschnitt_regexp = re.compile(r'Durchschnitt\: (.*?)<\/div>')
         html = browser.get(link).text
         try:
+            notenspiegel_regexp = re.compile(r'<td class="tbdata">(.*?)<\/td>')
             notenspiegel = [0 if x.strip() == '---' else int(x.strip()) for x in notenspiegel_regexp.findall(html)[1:]]
             avg = get_avg_from_notenspiegel(notenspiegel)
             return {
@@ -118,6 +112,3 @@ def get_grades():
             "avg": notenspiegel_data['avg']
         })
     return grades
-
-if __name__ == '__main__':
-    export()
