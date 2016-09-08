@@ -6,6 +6,8 @@ grades = helper.get_grades()
 diffs = []
 for grade_data in grades:
     grade = grade_data['grade']
+    if grade == 5.0:
+        continue
     avg = grade_data['avg']
     title = grade_data['title']
     diff = avg - grade
