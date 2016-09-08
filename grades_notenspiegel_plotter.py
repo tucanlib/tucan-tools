@@ -61,12 +61,8 @@ def plot_notenspiegel(title, notenspiegel):
     plt.title(title, loc='left')
     plt.savefig('{}/{}.png'.format(OUTPUT_DIR, sanitized_title))
 
-def create_notenspiegel_plot(grade):
-    plot_notenspiegel(grade['title'], grade['notenspiegel'])
-
 for grade in grades:
-    create_notenspiegel_plot(grade)
-
+    plot_notenspiegel(grade['title'], grade['notenspiegel'])
 
 notenspiegel = [0] * len(available_grades)
 for grade in grades:
