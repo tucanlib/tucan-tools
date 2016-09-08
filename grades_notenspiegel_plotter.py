@@ -1,20 +1,18 @@
-#!/usr/bin/env python
-# a bar plot with errorbars
+#!/usr/bin/env python3
+
 import numpy as np
 import matplotlib.pyplot as plt
 import json
 import os
 import re
+import helper
 
 OUTPUT_DIR = 'output'
 
-with open('grades.json', 'r') as f:
-    grades = json.load(f)
-
+grades = helper.get_grades()
 
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
-
 
 def autolabel_bars(rects):
     for rect in rects:
@@ -25,7 +23,7 @@ def autolabel_bars(rects):
 
 def sanitize_title_for_filename(title):
     title = title.replace(' ', '-').replace(':', '-').lower()
-    return title.encode('utf-8')
+    return title
 
 def print_notenspiegel_plot(grade):
     plt.cla()
@@ -49,12 +47,18 @@ def print_notenspiegel_plot(grade):
 
     plt.xlabel("grades")
     plt.ylabel("# students")
+
+    plt.tick_params(
+        axis='both',
+        which='both',
+        top='off',
+        left='off',
+        labelleft='off',
+        right='off'
+    )
     plt.grid(False)
-    plt.title(title)
-    plt.savefig('{}/{}.png'.format(OUTPUT_DIR, sanitized_title), dpi=300)
+    plt.title(title, loc='left')
+    plt.savefig('{}/{}.png'.format(OUTPUT_DIR, sanitized_title))
 
 for grade in grades:
     print_notenspiegel_plot(grade)
-
-
-

@@ -4,3 +4,5 @@ node_modules
 grades.json
 *.json
 output
+__pycache__
+*.pyc

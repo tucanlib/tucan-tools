@@ -1,18 +1,8 @@
 #!/usr/bin/env python3
-
-'''
-Please don't look further - I wrote this code at deep night, because a friend of mine (who got his CS bachelor given for free) could not get my other script to work :D
-So this is late night code and will propably stay that way.
-'''
-
+import helper
 import json
 
-try:
-    with open('grades.json', 'r') as f:
-        grades = json.load(f)
-except:
-    print('Error retreiving/parsing grades.json. Exiting ungracefully')
-    raise(Exception('Was ist das für 1 Datenhaltung?'))
+grades = helper.get_grades()
 
 diffs = []
 for grade_data in grades:
