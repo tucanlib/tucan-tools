@@ -11,6 +11,13 @@ pip3 install mechanicalsoup
 pip3 install argparse
 
 python3 grades_extractor.py TUCAN_USERNAME PASSWORD
+# grades.json will now hold the grades data
+
+# If you'd like to plot the notenspiegel, just do:
+pip3 install matplotlib
+pip3 install numpy
+python3 grades_notenspiegel_plotter.py TUCAN_USERNAME PASSWORD
+# the plots will reside in the newly created output folder
 ```
 
 ## TODO:
