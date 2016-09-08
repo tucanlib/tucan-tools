@@ -3,28 +3,21 @@
 '''
 Retrieves the grades from tucan (pain!)
 
-Please don't look further - I wrote this code at deep night, because a friend of mine (who got his CS bachelor given for free) could not get my other script to work :D
+Please don't look further - I wrote this code at deep night,
+because a friend of mine (who got his CS bachelor given for free)
+could not get my other script to work :D
+
 So this is late night code and will propably stay that way.
 '''
 
-import argparse
+
 import mechanicalsoup
 import sys
 import re
 import json
 
-# Gets called if this is the __main__ script
-def get_login_data():
-    parser = argparse.ArgumentParser(description='Login')
-    parser.add_argument("username")
-    parser.add_argument("password")
-    args = parser.parse_args()
-    return args
-
-def get_grades():
+def get_grades(username, password):
     BASE_URL = 'https://www.tucan.tu-darmstadt.de'
-
-    args = get_login_data()
 
     # Lasciate ogni speranza, oh voi ch'entrate
 
@@ -37,14 +30,16 @@ def get_grades():
     def get_redirection_link(page):
         return BASE_URL + page.soup.select('a')[2].attrs['href']
 
+    # Login
     browser = mechanicalsoup.Browser(soup_config={"features":"html.parser"})
     login_page = browser.get(BASE_URL)
+    # HTML redirects, because why not
     login_page = browser.get(get_redirection_link(login_page))
     login_page = browser.get(get_redirection_link(login_page))
     login_form = login_page.soup.select(SELECTORS['LoginForm'])[0]
 
-    login_form.select(SELECTORS['LoginUser'])[0]['value'] = args.username
-    login_form.select(SELECTORS['LoginPass'])[0]['value'] = args.password
+    login_form.select(SELECTORS['LoginUser'])[0]['value'] = username
+    login_form.select(SELECTORS['LoginPass'])[0]['value'] = password
 
     login_page = browser.submit(login_form, login_page.url)
     redirected_url = "=".join(login_page.headers['REFRESH'].split('=')[1:])
@@ -52,6 +47,7 @@ def get_grades():
     start_page = browser.get(BASE_URL + redirected_url)
     start_page = browser.get(get_redirection_link(start_page))
 
+    # Prüfungsergebnisse page
     ergebnisse_page_link = BASE_URL + start_page.soup.select('li[title="Prüfungsergebnisse"] a')[0].attrs['href']
     ergebnisse_page = browser.get(ergebnisse_page_link)
 
@@ -59,36 +55,36 @@ def get_grades():
     def get_link_for_ergebnisse(dispatcher, applicationName, programName, sessionNo, menuId, args):
         return dispatcher + "?APPNAME=" + applicationName + "&PRGNAME=" + programName + "&ARGUMENTS=-N" + sessionNo + ",-N" + menuId + ',' + args
 
-    new_link = ergebnisse_page.soup.select('select#semester')[0].attrs['onchange'].replace('reloadpage.createUrlAndReload(', '').replace(')', '').replace('this.value', '999').replace('\'', '').split(',')
+    # To show all the grades you have to select an item in a select box.
+    # Unfortunately the used library is no headless browser, so it has to be done manually
+    def get_link_for_all_ergebnisse(page):
+        args = page.soup.select('select#semester')[0].attrs['onchange'].replace('reloadpage.createUrlAndReload(', '').replace(')', '').replace('this.value', '999').replace('\'', '').split(',')
+        return get_link_for_ergebnisse(*args)
 
-    ergebnisse_page = browser.get(BASE_URL + get_link_for_ergebnisse(*new_link))
+    ergebnisse_page = browser.get(BASE_URL + get_link_for_all_ergebnisse(ergebnisse_page))
+
+    # Reomove all "Bestanden" courses since they don't have grades
     grades = [x for x in ergebnisse_page.soup.select('table tr') if "bestanden" not in x.text]
     grade_tds = []
     for grade in grades:
         tds = grade.select('td')
-        if tds is None or len(tds) <= 0:
-            continue
-        if len(tds[-1].select('a')) <= 0:
+        if tds is None or len(tds) <= 0 or len(tds[-1].select('a')) <= 0:
             continue
         grade_tds.append(tds)
 
-
     ### Parsing is done now - now the relaxing part starts...
-
-    def get_avg_from_notenspiegel(notenspiegel):
-        grades = [1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, 5.0]
-        n = [x * grades[index] for (index, x) in enumerate(notenspiegel)]
-        return sum(n) / sum(notenspiegel)
 
     def get_notenspiegel(link):
         html = browser.get(link)
         try:
+            # Get all notenspiegel items (the first two tds are discarded)
             notenspiegel = [0 if x.text.strip() == '---' else int(x.text.strip()) for x in html.soup.select('td.tbdata')[2:]]
             return notenspiegel
         except:
             return None
 
     def sanitize_title(title):
+        # Removes the ID from the course and does some sanitation
         title = title.split('<br>')[0].replace('\n', ' ').replace('&nbsp;', ' ').strip()
         return re.sub(r'\d{2}-\d{2}-\d{4}(?:-.{2})?', '', title).strip()
 
@@ -100,10 +96,13 @@ def get_grades():
         if notenspiegel_data is None:
             print("Failed to get notenspiegel for: {}".format(grade_data[0].text.replace('\n', ' ').strip()))
             continue
+        grade = float(grade_data[2].text.strip().replace(',','.'))
+        sanitized_title = sanitize_title(str(grade_data[0]).split('<br/>')[0].replace('<td>', ''))
+        title = grade_data[0].text.strip()
         grades.append({
-            "originalTitle": grade_data[0].text.strip(),
-            "title": sanitize_title(str(grade_data[0]).split('<br/>')[0].replace('<td>', '')),
-            "grade": float(grade_data[2].text.strip().replace(',','.')),
+            "originalTitle": title,
+            "title": sanitized_title,
+            "grade": grade,
             "notenspiegel": notenspiegel_data
         })
     return grades

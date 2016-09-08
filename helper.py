@@ -1,13 +1,43 @@
 import grades_exporter
 import json
 import os
+import argparse
 
 GRADES_JSON = 'grades.json'
+CREDENTIALS_FILE = 'user-credentials.txt'
+
+def get_user_credentials():
+    def get_by_file():
+        with open(CREDENTIALS_FILE, 'r') as f:
+            contents = f.readlines()
+            if len(contents) != 2:
+                return None
+            return {
+                "username": contents[0].strip(),
+                "password": contents[1].strip()
+            }
+
+    # First try to get the user credentials by file, afterwards by programm arguments
+    try:
+        return get_by_file()
+    except:
+        pass
+
+    # Get the username/password from the programm args
+    parser = argparse.ArgumentParser(description='Login')
+    parser.add_argument("username")
+    parser.add_argument("password")
+    args = parser.parse_args()
+    return {
+        "username": args.username,
+        "password": args.password
+    }
 
 def get_grades():
     try:
         if not os.path.exists(GRADES_JSON):
-            grades = grades_exporter.get_grades()
+            credentials = get_user_credentials()
+            grades = grades_exporter.get_grades(credentials['username'], credentials['password'])
             with open(GRADES_JSON, 'w+') as f:
                 json.dump(grades, f, indent=4)
 

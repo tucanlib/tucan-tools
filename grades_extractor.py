@@ -18,10 +18,14 @@ for grade_data in grades:
     diffs_without_failed.append(diff_without_failed)
     print("grade: {}\tavg: {}\tdiff: {}\tdiff without 5,0: {}\t\t({})".format(grade, round(avg, 2), round(diff, 1), round(diff_without_failed, 1), title))
 
+def get_diff_avg_for_notenspiegel(diffs):
+    return sum(diffs) / len(diffs)
+
 print('\n' * 3)
 print('#Courses: {}'.format(len(grades)))
-# you like?
-avg_of_diff_to_avgs = sum(diffs) / len(diffs)
-avg_of_diff_to_avgs_without_failed = sum(diffs_without_failed) / len(diffs_without_failed)
+
+avg_of_diff_to_avgs = get_diff_avg_for_notenspiegel(diffs)
+avg_of_diff_to_avgs_without_failed = get_diff_avg_for_notenspiegel(diffs_without_failed)
+
 print('avg diff: {}'.format(round(avg_of_diff_to_avgs, 2)))
 print('avg diff without failed: {}'.format(round(avg_of_diff_to_avgs_without_failed, 2)))
