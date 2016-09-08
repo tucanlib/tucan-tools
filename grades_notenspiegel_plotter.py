@@ -21,17 +21,13 @@ def autolabel_bars(rects):
                 '%d' % int(height),
                 ha='center', va='bottom')
 
-def sanitize_title_for_filename(title):
-    title = title.replace(' ', '-').replace(':', '-').lower()
-    return title
-
-def print_notenspiegel_plot(grade):
+def create_notenspiegel_plot(grade):
     plt.cla()
     plt.clf()
     plt.style.use('seaborn-whitegrid')
 
     title = grade['title']
-    sanitized_title = sanitize_title_for_filename(title)
+    sanitized_title = helper.sanitize_filename(title)
     notenspiegel = grade['notenspiegel']
     ind = np.arange(len(notenspiegel))
     ind = np.array(available_grades)
@@ -62,4 +58,4 @@ def print_notenspiegel_plot(grade):
     plt.savefig('{}/{}.png'.format(OUTPUT_DIR, sanitized_title))
 
 for grade in grades:
-    print_notenspiegel_plot(grade)
+    create_notenspiegel_plot(grade)
