@@ -81,10 +81,9 @@ def get_grades():
         return sum(n) / sum(notenspiegel)
 
     def get_notenspiegel(link):
-        html = browser.get(link).text
+        html = browser.get(link)
         try:
-            notenspiegel_regexp = re.compile(r'<td class="tbdata">(.*?)<\/td>')
-            notenspiegel = [0 if x.strip() == '---' else int(x.strip()) for x in notenspiegel_regexp.findall(html)[1:]]
+            notenspiegel = [0 if x.text.strip() == '---' else int(x.text.strip()) for x in html.soup.select('td.tbdata')[2:]]
             avg = get_avg_from_notenspiegel(notenspiegel)
             return {
                 "notenspiegel": notenspiegel,
@@ -95,10 +94,11 @@ def get_grades():
 
     def sanitize_title(title):
         title = title.split('<br>')[0].replace('\n', ' ').replace('&nbsp;', ' ').strip()
-        return re.sub(r'\d{2}-\d{2}-\d{4}(?:-iv)?', '', title).strip()
+        return re.sub(r'\d{2}-\d{2}-\d{4}(?:-.{2})?', '', title).strip()
 
     grades = []
     for grade_data in grade_tds:
+        # The link to the notenspiegel is in the last column of the table
         notenspiegel_link = BASE_URL + grade_data[-1].find('a').attrs['href']
         notenspiegel_data = get_notenspiegel(notenspiegel_link)
         if notenspiegel_data is None:
