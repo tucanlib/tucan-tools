@@ -4,18 +4,24 @@ import helper
 grades = helper.get_grades()
 
 diffs = []
+diffs_without_failed = []
 for grade_data in grades:
     grade = grade_data['grade']
     if grade == 5.0:
         continue
-    avg = grade_data['avg']
+    avg = helper.get_avg_from_notenspiegel(grade_data['notenspiegel'])
+    avg_without_failed = helper.get_avg_from_notenspiegel_without_failed(grade_data['notenspiegel'])
     title = grade_data['title']
     diff = avg - grade
+    diff_without_failed = avg_without_failed - grade
     diffs.append(diff)
-    print("grade: {}\tavg: {}\tdiff: {}\t({})".format(grade, round(avg, 2), round(diff, 1), title))
+    diffs_without_failed.append(diff_without_failed)
+    print("grade: {}\tavg: {}\tdiff: {}\tdiff without 5,0: {}\t\t({})".format(grade, round(avg, 2), round(diff, 1), round(diff_without_failed, 1), title))
 
 print('\n' * 3)
 print('#Courses: {}'.format(len(grades)))
 # you like?
 avg_of_diff_to_avgs = sum(diffs) / len(diffs)
+avg_of_diff_to_avgs_without_failed = sum(diffs_without_failed) / len(diffs_without_failed)
 print('avg diff: {}'.format(round(avg_of_diff_to_avgs, 2)))
+print('avg diff without failed: {}'.format(round(avg_of_diff_to_avgs_without_failed, 2)))

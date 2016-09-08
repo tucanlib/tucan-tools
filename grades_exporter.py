@@ -84,11 +84,7 @@ def get_grades():
         html = browser.get(link)
         try:
             notenspiegel = [0 if x.text.strip() == '---' else int(x.text.strip()) for x in html.soup.select('td.tbdata')[2:]]
-            avg = get_avg_from_notenspiegel(notenspiegel)
-            return {
-                "notenspiegel": notenspiegel,
-                "avg": avg
-            }
+            return notenspiegel
         except:
             return None
 
@@ -108,7 +104,6 @@ def get_grades():
             "originalTitle": grade_data[0].text.strip(),
             "title": sanitize_title(str(grade_data[0]).split('<br/>')[0].replace('<td>', '')),
             "grade": float(grade_data[2].text.strip().replace(',','.')),
-            "notenspiegel": notenspiegel_data['notenspiegel'],
-            "avg": notenspiegel_data['avg']
+            "notenspiegel": notenspiegel_data
         })
     return grades
