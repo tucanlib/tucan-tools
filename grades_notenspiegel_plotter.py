@@ -64,8 +64,8 @@ def plot_notenspiegel(title, notenspiegel):
 def create_notenspiegel_plot(grade):
     plot_notenspiegel(grade['title'], grade['notenspiegel'])
 
-#for grade in grades:
-#    create_notenspiegel_plot(grade)
+for grade in grades:
+    create_notenspiegel_plot(grade)
 
 
 notenspiegel = [0] * len(available_grades)
