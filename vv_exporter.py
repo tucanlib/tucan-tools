@@ -35,9 +35,11 @@ def details_from_element(element):
     return  {'title': title, 'link': link, 'isParent': "PRGNAME=REGISTRATION" in link,  'isModule': "PRGNAME=MODULEDETAILS" in link, 'children': []}
 
 def get_all_links(page):
-    links = [details_from_element(x) for x in page.soup.select('#pageContent ul li, #pageContent table tr') if x.text.strip() not in BLACKLIST and len(x.select('a')) > 0]
+    SELECTOR = '#pageContent ul li, #pageContent table tr'
+    links = [details_from_element(x) for x in page.soup.select(SELECTOR) if x.text.strip() not in BLACKLIST and len(x.select('a')) > 0]
     return links
 
+# ....
 def sanitize_detail(detail):
     replacements = [
         ('\t', ''),
@@ -92,28 +94,25 @@ def walk_modules(vv, fn, only_children = True):
     if len(vv['children']) == 0 or not only_children:
         vv = fn(vv)
     for child in vv['children']:
-        child = walk_modules(child, fn)
+        child = walk_modules(child, fn, only_children)
     return vv
 
-def get_vv():
-    BASE_URL = helper.get_tucan_baseurl()
-    (browser, start_page) = helper.log_into_tucan_()
-
+def get_vv(browser, start_page, base_url):
     # anmeldung page
-    anmeldung_page_link = BASE_URL + start_page.soup.select('li[title="Anmeldung"] a')[0].attrs['href']
+    anmeldung_page_link = base_url + start_page.soup.select('li[title="Anmeldung"] a')[0].attrs['href']
 
-    vv = crawl(browser, {'title': 'Start',
-        'link': anmeldung_page_link, 'isParent': True,  'isModule': False, 'children': [], "depth": 0})
+    vv = crawl(browser, {'title': 'Start', 'link': anmeldung_page_link, 'isParent': True,  'isModule': False, 'children': [], "depth": 0})
 
     def remove_unneccesary_data(module):
-        del module['link']
-        del module['isParent']
+        for e in ['link', 'isParent', 'depth', 'isModule']:
+            del module[e]
         return module
 
     vv = walk_modules(vv, remove_unneccesary_data, only_children = False)
-
-    with open('modules.json', 'w+') as f:
-        json.dump(vv['children'], f, indent=4)
+    return vv['children']
 
 if __name__ == '__main__':
-    get_vv()
+    (browser, page) = helper.log_into_tucan_()
+    vv = get_vv(browser, page, helper.get_tucan_baseurl())
+    with open('modules.json', 'w+') as f:
+        json.dump(vv, f, indent=4)
