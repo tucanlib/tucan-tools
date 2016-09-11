@@ -1,0 +1,12 @@
+{
+  "name": "tucan-grades-exporter",
+  "version": "1.0.0",
+  "description": ":)",
+  "main": "get-grades.js",
+  "author": "David Gengenbach <davidgengenbach@gmx.de>",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "node-horseman": "^2.8.2"
+  }
+}
