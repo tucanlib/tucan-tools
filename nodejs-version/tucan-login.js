@@ -1,5 +1,6 @@
 /* jshint node: true */
-var horseman = new require('node-horseman')();
+var Horseman = require('node-horseman');
+var horseman = new Horseman();
 
 var SELECTORS = {
     LoginUser: '#field_user',

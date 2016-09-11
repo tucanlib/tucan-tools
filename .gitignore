@@ -4,3 +4,5 @@
 output
 __pycache__
 user*
+
+!nodejs-version/package.json
