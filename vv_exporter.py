@@ -2,7 +2,7 @@
 
 '''
 Why does this have to be such a pain :/
-BeautifulSoup and me won't become friends, it's too stubbornly misunderstanding...
+BeautifulSoup and me won't become friends, it's misunderstanding me too stubbornly...
 '''
 
 import re
@@ -41,33 +41,46 @@ def sanitize_detail(detail):
         ('\t', ''),
         ('<br/>', '\n'),
         ('\n', '<br/>'),
-        (':', '\t'),
-        ('\t', ':')
+        (':', '\b'),
+        ('\b', ':'),
+        ('\r', ''),
+        ('////', '<br/>')
     ]
 
-    detail_text = detail['details']
+    reg_replacements = [
+        (r'^:', ''),
+        (r']$', ''),
+        (r'(<br\/>)*$', ''),
+        (r'^(<br\/>)*', ''),
+        (r'\s{2,}', '')
+    ]
+
+    detail_text = detail['details'].replace('<br/>', '////')
     detail_text = BeautifulSoup(detail_text, "html.parser").text
     detail['title'] = detail['title'].replace(':', '').strip()
 
     for r in replacements:
         detail_text = detail_text.replace(r[0], r[1]).strip()
 
-    detail_text = re.sub(r'^:', '', detail_text).strip()
-    detail_text = re.sub(r'(<br\/>)*$', '', detail_text).strip()
-    detail_text = re.sub(r'(<br\/>)*', '', detail_text).strip()
-    detail_text = re.sub(r']$', '', detail_text).strip()
+    for r in reg_replacements:
+        detail_text = re.sub(r[0], r[1], detail_text).strip()
+
     detail['details'] = detail_text
     return detail
 
 def extract_module_details(html):
-    details = []
     details_raw = html.select('#pageContent table:nth-of-type(1) .tbdata td')
     return [sanitize_detail({"title": x.split('</b>')[0].strip(), "details": x.split('</b>')[1].strip()}) for x in str(details_raw).split('<b>')[1:]]
 
 def extract_cp(link):
     for detail in link['details']:
         if 'Credits' in detail['title']:
-            return detail['details'].split(',')[0]
+            cp = detail['details'].split(',')[0]
+            try:
+                cp = int(cp)
+            except:
+                pass
+            return cp
     return 0
 
 def print_link(link):
