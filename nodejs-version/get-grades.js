@@ -13,7 +13,7 @@ var GRADES_JSON_FILENAME = 'grades.json';
 
 var SELECTORS = {
     Prüfungen: 'li[title="Prüfungen"] a.depth_1',
-    Leistungsspiegel: 'li[title="Leistungsspiegel"] a'
+    Leistungsspiegel: 'li[title="Leistungsspiegel"] a.depth_2'
 };
 
 var rl = readline.createInterface({
@@ -35,12 +35,15 @@ askQuestion('TuCan User: ')
 function getGrades(user, password) {
     return login
         .login(user, password, BASE_URL)
+        .waitForSelector(SELECTORS.Prüfungen)
         .click(SELECTORS.Prüfungen)
+        .waitForSelector(SELECTORS.Leistungsspiegel)
         .waitForNextPage()
         .click(SELECTORS.Leistungsspiegel)
+        .waitForSelector(SELECTORS.Leistungsspiegel)
         .waitForNextPage()
-        .evaluate(function(selector) {
-            return jQuery('.students_results tr img[src$="pass.gif"]')
+        .evaluate(function(done) {
+            var result = jQuery('.students_results tr img[src$=\"pass.gif\"]')
                 .map(function(index, item) {
                     var $item = jQuery(item);
                     var $parent = $item.closest('tr');
@@ -60,6 +63,7 @@ function getGrades(user, password) {
                     return !!item.grade;
                 })
                 .toArray();
+            done(null, result);
         })
         .then(function(grades) {
             fs.writeFileSync(GRADES_JSON_FILENAME, JSON.stringify(grades, null, '\t'), {
@@ -75,7 +79,7 @@ function getGrades(user, password) {
 }
 
 function askQuestion(question) {
-    return new Bluebird(function(resolve, reject) {
+    return new Bluebird(function(resolve) {
         rl.question(question, function(result) {
             resolve(result);
         });
