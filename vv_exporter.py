@@ -52,7 +52,8 @@ def sanitize_detail(detail):
         (r']$', ''),
         (r'(<br\/>)*$', ''),
         (r'^(<br\/>)*', ''),
-        (r'\s{2,}', '')
+        (r'\s{2,}', ''),
+        (r'(<br\/>)*$', '')
     ]
 
     detail_text = detail['details'].replace('<br/>', '////')

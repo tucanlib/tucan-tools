@@ -4,6 +4,7 @@ import os
 import argparse
 import mechanicalsoup
 import getpass
+import re
 
 GRADES_JSON = 'grades.json'
 CREDENTIALS_FILE = 'user-credentials.txt'
@@ -66,6 +67,20 @@ def get_avg_from_notenspiegel(notenspiegel):
     if sum(notenspiegel) == 0:
         return -1
     return sum(n) / sum(notenspiegel)
+
+def sanitize_title(title):
+    # Removes the ID from the course and does some sanitation
+    title = title.split('<br>')[0].replace('\n', ' ').replace('&nbsp;', ' ').strip()
+    return sanitize_title_(title)
+
+def sanitize_title_(title):
+    return remove_course_semester(remove_course_nr(title)).strip()
+
+def remove_course_nr(title):
+    return re.sub(r'\d{2}-\d{2}-\d{4}(?:-.{2})?', '', title).strip()
+
+def remove_course_semester(title):
+    return re.sub(r'\(.*?20.*?\)$', '', title.strip()).strip()
 
 def sanitize_filename(title):
     removestr = ['\t', '\n', '(', ')', ':', '\t', ' ', '/']

@@ -29,8 +29,10 @@ def get_grades():
         cp = convert_to_float(tds[3].text)
         grade = convert_to_float(tds[5].text)
         grades.append({"title": title, "grade": grade, "cp": cp})
-    print(grades)
-    print("CPs:", sum([x['cp'] for x in grades if x['cp'] != -1]))
+        if grade != -1:
+            print("CP: {:<6} Grade: {:<4}\t{}".format(cp, grade, title))
+    print()
+    print("CP:", sum([x['cp'] for x in grades if x['cp'] != -1]))
 
 if __name__ == '__main__':
     get_grades()

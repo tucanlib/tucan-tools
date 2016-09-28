@@ -17,7 +17,7 @@ import re
 import json
 import helper
 
-def get_grades():
+def get_grades(with_notenspiegel = True):
     BASE_URL = helper.get_tucan_baseurl()
 
     # Lasciate ogni speranza, oh voi ch'entrate
@@ -27,28 +27,26 @@ def get_grades():
     ergebnisse_page_link = BASE_URL + start_page.soup.select('li[title="Prüfungsergebnisse"] a')[0].attrs['href']
     ergebnisse_page = browser.get(ergebnisse_page_link)
 
-    # Straight outta tucan skripts.js
-    def get_link_for_ergebnisse(dispatcher, applicationName, programName, sessionNo, menuId, args):
-        return dispatcher + "?APPNAME=" + applicationName + "&PRGNAME=" + programName + "&ARGUMENTS=-N" + sessionNo + ",-N" + menuId + ',' + args
-
     # To show all the grades you have to select an item in a select box.
     # Unfortunately the used library is no headless browser, so it has to be done manually
     def get_link_for_all_ergebnisse(page):
-        args = page.soup.select('select#semester')[0].attrs['onchange'].replace('reloadpage.createUrlAndReload(', '').replace(')', '').replace('this.value', '999').replace('\'', '').split(',')
-        return get_link_for_ergebnisse(*args)
+        (dispatcher, applicationName, programName, sessionNo, menuId, args) = page.soup.select('select#semester')[0].attrs['onchange'].replace('reloadpage.createUrlAndReload(', '').replace(')', '').replace('this.value', '999').replace('\'', '').split(',')
+
+        # Straight outta tucan skript.js
+        return dispatcher + "?APPNAME=" + applicationName + "&PRGNAME=" + programName + "&ARGUMENTS=-N" + sessionNo + ",-N" + menuId + ',' + args
 
     ergebnisse_page = browser.get(BASE_URL + get_link_for_all_ergebnisse(ergebnisse_page))
 
-    # Reomove all "Bestanden" courses since they don't have grades
+    # Remove all "Bestanden" courses since they don't have grades
     grades = [x for x in ergebnisse_page.soup.select('table tr') if "bestanden" not in x.text]
     grade_tds = []
     for grade in grades:
         tds = grade.select('td')
+        # Ignore "faulty" lines (that don't have a notenspiegel for example)
+        # TODO: this should be more generic - because not all grades have a notenspiegel (for example the bachelor thesis)
         if tds is None or len(tds) <= 0 or len(tds[-1].select('a')) <= 0:
             continue
         grade_tds.append(tds)
-
-    ### Parsing is done now - now the relaxing part starts...
 
     def get_notenspiegel(link):
         html = browser.get(link)
@@ -59,33 +57,38 @@ def get_grades():
         except:
             return None
 
-    def sanitize_title(title):
-        # Removes the ID from the course and does some sanitation
-        title = title.split('<br>')[0].replace('\n', ' ').replace('&nbsp;', ' ').strip()
-        return re.sub(r'\d{2}-\d{2}-\d{4}(?:-.{2})?', '', title).strip()
+    def get_grade(grade_as_string):
+        try:
+            return float(grade_as_string.strip().replace(',','.'))
+        except:
+            return None
 
     grades = []
     for grade_data in grade_tds:
-        # The link to the notenspiegel is in the last column of the table
-        notenspiegel_link = BASE_URL + grade_data[-1].find('a').attrs['href']
-        notenspiegel_data = get_notenspiegel(notenspiegel_link)
-        title = grade_data[0].text.replace('\n', ' ').strip()
-        if notenspiegel_data is None:
-            print("Error retrieving notenspiegel for: {}".format(title))
-            continue
+        # Title
+        title = grade_data[0].text.strip()
+        sanitized_title = helper.sanitize_title(str(grade_data[0]).split('<br/>')[0].replace('<td>', ''))
 
-        try:
-            grade = float(grade_data[2].text.strip().replace(',','.'))
-        except:
+        # Grade
+        grade = get_grade(grade_data[2].text)
+        if grade is None:
             print('Error retrieving grade for: {}'.format(title))
             continue
 
-        sanitized_title = sanitize_title(str(grade_data[0]).split('<br/>')[0].replace('<td>', ''))
-        title = grade_data[0].text.strip()
-        grades.append({
+        r = {
             "originalTitle": title,
             "title": sanitized_title,
-            "grade": grade,
-            "notenspiegel": notenspiegel_data
-        })
+            "grade": grade
+        }
+
+        # Notenspiegel
+        if with_notenspiegel:
+            notenspiegel_link = BASE_URL + grade_data[-1].find('a').attrs['href']
+            notenspiegel_data = get_notenspiegel(notenspiegel_link)
+            if notenspiegel_data is None:
+                print("Error retrieving notenspiegel for: {}".format(sanitized_title))
+                continue
+            r['notenspiegel'] = notenspiegel_data
+
+        grades.append(r)
     return grades
