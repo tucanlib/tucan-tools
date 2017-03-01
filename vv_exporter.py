@@ -3,7 +3,10 @@
 import re
 import json
 import helper
+import warnings
 from bs4 import BeautifulSoup
+
+warnings.simplefilter('ignore', UserWarning)
 
 BLACKLIST = (
     'Weitere Veranstaltungen',
