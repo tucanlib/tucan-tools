@@ -3,11 +3,12 @@
 
 Outputs the difference of your grades to the grades of the others.
 
+You can also export the Vorlesungszeichnis of the current semester (see below).
+
 
 ```bash
 # Needed: python3 and pip3 or pip.exe or whatever, and:
-pip3 install mechanicalsoup
-pip3 install argparse
+pip3 install -r requirements.txt
 
 # To export the grades:
 # You will get prompted for your username/password
@@ -22,12 +23,18 @@ pip3 install matplotlib
 pip3 install numpy
 python3 grades_notenspiegel_plotter.py
 # (plots will reside in newly created 'output' folder)
-
-# New: exporting the VV is now possible, too:
-pip3 install bs4
-python3 vv_exporter.py
-# (modules.json)
 ```
+
+## Vorlesungsverzeichnis Exporter
+You can export the Vorlesungszeichnis:
+```shell
+python3 vv_exporter.py
+```
+The `modules.json` will now reside in the folder.
+
+You can display the VV with the [tucan-catalog](https://github.com/davidgengenbach/tucan-catalog). See the repo README for that.
+
+The VV exporter crawls the _Anmeldung_ page, not the _VV_ page in TuCan! There are small but irrelevant differences between these two pages. The crawler uses the _Anmeldung_ page in TuCan, because it contains additional infos (like the credit-points of a module).
 
 ## Caveats
 - Only exports grades where the Notenspiegel is available. This is by choice, not accident - so technically no caveat but will be perceived as one.
