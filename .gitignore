@@ -1,6 +1,7 @@
 *.json
 *.pyc
 *.txt
+!requirements.txt
 output
 __pycache__
 user*
