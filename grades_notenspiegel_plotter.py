@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-
+'''
+Plot the "Notenspiegel" of all courses.
+'''
 import numpy as np
 import matplotlib.pyplot as plt
 import os

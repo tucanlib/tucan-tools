@@ -41,9 +41,22 @@ The VV exporter crawls the _Anmeldung_ page, not the _VV_ page in TuCan! There a
 - Once the `grades.json` got extracted from TuCan, it will be reused whenever possible. So if there are grades/courses missing, just delete the `grades.json` and try again.
 
 
-## TODO:
+## TODO
 - Get better grades...
 - Remind Micha to install a sane OS where `pip` is not `pip.exe`
 
 
-![Notenspiegel](screenshot.png)
+## Screenshots
+
+#### Notenspiegel Plot
+![Notenspiegel](screenshot-plot.png)
+
+
+#### Leistungsspiegel Export
+_Ja, das sind meine echten Noten :smile:_
+![Leistungsspiegel](screenshot-leistungsspiegel.png)
+
+
+#### VV Export
+![VV](screenshot-vv.png)
+
