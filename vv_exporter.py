@@ -30,7 +30,7 @@ def main():
     (browser, page) = helper.log_into_tucan_()
     vv = get_vv(browser, page, helper.get_tucan_baseurl())
     with open('modules.json', 'w+') as f:
-        json.dump(vv, f, indent=4)
+        json.dump(vv, f, indent=4, sort_keys = True)
 
 
 def details_from_element(element):
