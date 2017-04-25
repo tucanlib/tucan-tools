@@ -1,33 +1,45 @@
 #!/usr/bin/env python3
 import helper
 
-grades = helper.get_grades()
+def main():
+    args = get_args()
+    with_notenspiegel = not args.without_notenspiegel
+    grades = helper.get_grades(with_notenspiegel)
 
-diffs = []
-diffs_without_failed = []
-for grade_data in grades:
-    grade = grade_data['grade']
-    if grade == 5.0:
-        continue
-    avg = helper.get_avg_from_notenspiegel(grade_data['notenspiegel'])
-    if avg < 1:
-        continue
-    avg_without_failed = helper.get_avg_from_notenspiegel_without_failed(grade_data['notenspiegel'])
-    title = grade_data['title']
-    diff = avg - grade
-    diff_without_failed = avg_without_failed - grade
-    diffs.append(diff)
-    diffs_without_failed.append(diff_without_failed)
-    print("grade: {}\tavg: {}\tdiff: {}\tdiff without 5,0: {}\t\t({})".format(grade, round(avg, 2), round(diff, 1), round(diff_without_failed, 1), title))
+    for grade_data in grades:
+        grade = grade_data['grade']
+        title = grade_data['title']
+        if grade == 5.0:
+            continue
+        print("{}\t{}".format(grade, title))
+    
+    if with_notenspiegel:
+        diffs = []
+        diffs_without_failed = []
+        for grade in grades:
+            grade = grade_data['grade']
+            avg = helper.get_avg_from_notenspiegel(grade_data['notenspiegel'])
+            if avg < 1:
+                continue
+            avg_without_failed = helper.get_avg_from_notenspiegel_without_failed(grade_data['notenspiegel'])
+            diff = avg - grade
+            diff_without_failed = avg_without_failed - grade
+            diffs.append(diff)
+            diffs_without_failed.append(diff_without_failed)
 
-def get_diff_avg_for_notenspiegel(diffs):
-    return sum(diffs) / len(diffs)
+        def get_diff_avg_for_notenspiegel(diffs):
+            return sum(diffs) / len(diffs)
+        avg_of_diff_to_avgs = get_diff_avg_for_notenspiegel(diffs)
+        avg_of_diff_to_avgs_without_failed = get_diff_avg_for_notenspiegel(diffs_without_failed)
+        print('avg diff: {}'.format(round(avg_of_diff_to_avgs, 2)))
+        print('avg diff without failed: {}'.format(round(avg_of_diff_to_avgs_without_failed, 2)))
 
-print('\n' * 3)
-print('#Courses: {}'.format(len(grades)))
+def get_args():
+    import argparse
+    parser = argparse.ArgumentParser(description='Extract grades from tucan', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--without-notenspiegel', action='store_true', help='Whether the notenspiegel is NOT extracted. Saves some crawling time.')
+    args = parser.parse_args()
+    return args
 
-avg_of_diff_to_avgs = get_diff_avg_for_notenspiegel(diffs)
-avg_of_diff_to_avgs_without_failed = get_diff_avg_for_notenspiegel(diffs_without_failed)
-
-print('avg diff: {}'.format(round(avg_of_diff_to_avgs, 2)))
-print('avg diff without failed: {}'.format(round(avg_of_diff_to_avgs_without_failed, 2)))
+if __name__ == '__main__':
+    main()

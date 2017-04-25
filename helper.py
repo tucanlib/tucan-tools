@@ -45,10 +45,10 @@ def get_user_credentials():
         pass
     raise(Exception('Could not retreive username/password. Are you doing this on purpose?'))
 
-def get_grades():
+def get_grades(with_notenspiegel = True, force_new = False):
     try:
-        if not os.path.exists(GRADES_JSON):
-            grades = grades_exporter.get_grades()
+        if not os.path.exists(GRADES_JSON) or force_new:
+            grades = grades_exporter.get_grades(with_notenspiegel = with_notenspiegel)
             with open(GRADES_JSON, 'w+') as f:
                 json.dump(grades, f, indent=4)
         with open(GRADES_JSON, 'r') as f:
