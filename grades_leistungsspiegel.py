@@ -33,7 +33,6 @@ def get_grades():
         title = tds[1].find('a').text.strip()
         cp = convert_to_float(tds[3].text)
         grade = convert_to_float(tds[5].text)
-        grade = 1.0
         grades.append({"title": title, "grade": grade, "cp": cp})
         if grade != -1:
             print("CP: {:<6} Grade: {:<4}\t{}".format(cp, grade, title))
