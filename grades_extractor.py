@@ -4,14 +4,14 @@ import helper
 def main():
     args = get_args()
     with_notenspiegel = not args.without_notenspiegel
-    grades = helper.get_grades(with_notenspiegel)
+    grades = helper.get_grades(with_notenspiegel, force_new = args.force_new)
 
     for grade_data in grades:
         grade = grade_data['grade']
         title = grade_data['title']
         if grade == 5.0:
             continue
-        print("{}\t{}".format(grade, title))
+        print("{}\t{}".format(grade, title.encode('utf-8')))
     
     if with_notenspiegel:
         diffs = []
@@ -38,6 +38,7 @@ def get_args():
     import argparse
     parser = argparse.ArgumentParser(description='Extract grades from tucan', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--without-notenspiegel', action='store_true', help='Whether the notenspiegel is NOT extracted. Saves some crawling time.')
+    parser.add_argument('--force-new', action='store_true', help='Whether to download the grades again.')
     args = parser.parse_args()
     return args
 

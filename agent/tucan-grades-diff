@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+
+OLD=$(dirname $0)
+cd $OLD
+
+CACHE="$OLD/grades.txt"
+CACHE_OLD="$OLD/grades.old.txt"
+
+mv $CACHE $CACHE_OLD
+
+OUT=$(./tucan-grades | sort)
+
+# Exit early if no grades are present
+if [ "$(printf "$OUT" | wc -l)" -eq 0 ]; then
+    printf "$(date) No grades exported\n"
+    exit
+fi
+
+printf "$OUT" > $CACHE
+
+OUT=$(diff $CACHE $CACHE_OLD)
+if [ $? -ne 0 ]; then
+   ./notify "Grades changed!" "$OUT" 
+fi

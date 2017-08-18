@@ -6,6 +6,8 @@ Outputs the difference of your grades to the grades of the others.
 You can also export the Vorlesungszeichnis of the current semester (see below).
 
 
+There is also a script to automatically watch for grade changes, see [agent/README.md](agent/README.md). This is useful when you want to be the first to post on Facebook that some grades are in TuCan :smile:
+
 ```bash
 # Needed: python3 and pip3 or pip.exe or whatever, and:
 pip3 install -r requirements.txt
