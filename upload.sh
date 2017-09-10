@@ -3,6 +3,15 @@
 SERVER="$FTP_SERVER"
 DIR="$FTP_FOLDER"
 
+# Defaults
+if [ -z "$SERVER" ]; then
+    SERVER='davidgengenbach.de'
+fi
+
+if [ -z "$DIR" ]; then
+    DIR='/sites/davidgengenbach/informatik-vv/sose17/assets'
+fi
+
 TMP=$(mktemp)
 DATE=$(date +%d.%m.%y)
 SEMESTER="WiSe 17/18"
