@@ -121,11 +121,14 @@ def extract_module_details(html, browser):
 
     # Extract the appointments and rooms of the module
     # TODO cleanup
-    links = get_links_of_table_with_caption(html, 'Kurse')
-    kurse_pages = [browser.get(link).soup for idx, link in enumerate(links)]
-    kurs_appointments = [extract_rooms_and_times_of_module(x) for x in kurse_pages][-1]
-    if len(kurs_appointments.select('tr')) > 2:
-        details.append({'title': 'Kurstermine', 'details': str(kurs_appointments)})
+    try:
+        links = get_links_of_table_with_caption(html, 'Kurse')
+        kurse_pages = [browser.get(link).soup for idx, link in enumerate(links)]
+        kurs_appointments = [extract_rooms_and_times_of_module(x) for x in kurse_pages][-1]
+        if len(kurs_appointments.select('tr')) > 2:
+            details.append({'title': 'Kurstermine', 'details': str(kurs_appointments)})
+    except Exception as e:
+        print('(Could not extract Kurstermine) - {}'.format(e))
     return details
 
 

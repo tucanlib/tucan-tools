@@ -32,17 +32,25 @@ def get_user_credentials():
             "password": password.strip()
         }
 
+    def get_from_env_variables():
+        password = os.environ.get('TUCAN_TOOLS_PASSWORD', None)
+        user = os.environ.get('TUCAN_TOOLS_USER', None)
+        if password and user:
+            return {
+                'username': user,
+                'password': password
+            }
+        else:
+            return None
 
-    # First try to get the user credentials by file, afterwards by programm arguments
-    try:
-        return get_by_file()
-    except:
-        pass
+    for strategy_fn in [get_from_env_variables, get_by_file, ask_user]:
+        try:
+            credentials = strategy_fn()
+            if credentials:
+                return credentials
+        except:
+            pass
 
-    try:
-        return ask_user()
-    except:
-        pass
     raise(Exception('Could not retreive username/password. Are you doing this on purpose?'))
 
 def get_grades(with_notenspiegel = True, force_new = False):
