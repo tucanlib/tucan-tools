@@ -42,6 +42,7 @@ The VV exporter crawls the _Anmeldung_ page, not the _VV_ page in TuCan! There a
 - Only exports grades where the Notenspiegel is available. This is by choice, not accident - so technically no caveat but will be perceived as one.
 - Once the `grades.json` got extracted from TuCan, it will be reused whenever possible. So if there are grades/courses missing, just delete the `grades.json` and try again.
 
+[![Build Status](https://travis-ci.org/tucanlib/tucan-tools.svg?branch=master)](https://travis-ci.org/tucanlib/tucan-tools)
 
 ## TODO
 - Get better grades...

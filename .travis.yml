@@ -3,11 +3,10 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
-  # Add FTP credentials to .netrc
-  - echo "machine $FTP_SERVER" > ~/.netrc
-  - echo "    login $FTP_LOGIN" >> ~/.netrc
-  - echo "    password $FTP_PASSWORD" >> ~/.netrc
 script:
   # Crawl VV
   - python -u vv_exporter.py
+  - ls -la
+
+after_success:
   - ./upload.sh

@@ -9,14 +9,14 @@ if [ -z "$SERVER" ]; then
 fi
 
 if [ -z "$DIR" ]; then
-    DIR='/sites/davidgengenbach/informatik-vv/sose17/assets'
+    DIR='/sites/davidgengenbach/informatik-vv/ws1718/assets'
 fi
 
 TMP=$(mktemp)
 DATE=$(date +%d.%m.%y)
 SEMESTER="WiSe 17/18"
 
-cat > $TMP <<EOF
+cat > constants.json <<EOF
 (function(angular) {
     'use strict';
     angular
@@ -26,7 +26,7 @@ cat > $TMP <<EOF
 })(angular);
 EOF
 
-# Credentials are in .netrc
+if [ -z "$FTP_LOGIN" ]; then
 ftp $SERVER <<EOF
     binary
     cd $DIR
@@ -34,3 +34,9 @@ ftp $SERVER <<EOF
     put $TMP constants.js
     bye
 EOF
+else
+    # Credentials are in .netrc
+    curl -T {modules.json,constants.json} -u $FTP_LOGIN:$FTP_PASSWORD ftp://$FTP_SERVER$FTP_FOLDER/
+fi
+
+rm constants.json
