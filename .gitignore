@@ -5,7 +5,6 @@
 output
 __pycache__
 user*
-upload.sh
 download-and-compare.sh
 user-credentials.txt
 #!nodejs-version/package.json
