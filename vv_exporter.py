@@ -13,13 +13,15 @@ warnings.simplefilter('ignore', UserWarning)
 # VVs again and again and again and again and again and again and ...)
 BLACKLIST = (
     'Weitere Veranstaltungen',
-    'Leistungen für den Masterstudiengang',
+    'Leistungen für den Masterstudiengang',  # PO 2009
+    'Vorgezogene Masterleistungen',          # PO 2015
     'Zusätzliche Leistungen',
     'Anmelden',
     'Gesamtkatalog aller Module an der TU Darmstadt',
     'Informatik fachübergreifend',
     'Module des Sprachenzentrums mit Fachprüfungen',
-    'Fachübergreifende Veranstaltungen',
+    'Fachübergreifende Veranstaltungen',     # PO 2009
+    'Fachübergreifende Lehrveranstaltungen', # PO 2015
     'Veranstaltung'
 )
 
