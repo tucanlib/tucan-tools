@@ -27,6 +27,21 @@ python3 grades_notenspiegel_plotter.py
 # (plots will reside in newly created 'output' folder)
 ```
 
+## Grade Change Detector
+You can watch for changes of your grades automatically using the `detect_grade_change.py` executable.
+Executing it retrieves the grades and saves them in the `grades/` directory.
+The next execution then also retrieves the grades and compares them with the most recent saved `grades/` file.
+If there are changes, it notifies you using the [notify2](https://notify2.readthedocs.io/en/latest/) library.
+
+Since the `detect_grade_change.py` executable does no automatic scheduling, you may add an entry to your crontab (or create a service):
+```cron
+0 * * * * cd FOLDER_WHERE_THE_TUCAN_TOOLS_ARE/tucan-tools && PATH_TO_YOUR_PYTHON_EXECUTABLE/python3 detect_grade_change.py
+```
+**Note** If you use a version manager, like anaconda or virtualenv, you have to manually define the executable path. Otherwise you can remove the `PATH_TO_YOUR_PYTHON_EXECUTABLE/` part. 
+
+This will check for changes in the grades each hour.
+
+
 ## Vorlesungsverzeichnis Exporter
 You can export the Vorlesungszeichnis:
 ```shell
