@@ -6,8 +6,9 @@ import mechanicalsoup
 import getpass
 import re
 
-GRADES_JSON = 'grades.json'
-CREDENTIALS_FILE = 'user-credentials.txt'
+current_path = os.path.dirname(os.path.abspath(__file__))
+GRADES_JSON = os.path.join(current_path, 'grades.json')
+CREDENTIALS_FILE = os.path.join(current_path, 'user-credentials.txt')
 BASE_URL = 'https://www.tucan.tu-darmstadt.de'
 
 def get_user_credentials():
