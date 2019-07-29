@@ -1,20 +1,10 @@
 #!/usr/bin/env bash
 
-SERVER="$FTP_SERVER"
-DIR="$FTP_FOLDER"
+SERVER="${FTP_SERVER:-davidgengenbach.de}"
+DIR="${FTP_FOLDER:-/sites/davidgengenbach/informatik-vv/sose19/assets}"
+SEMESTER="${SEMESTER:-SoSe 19}"
 
-# Defaults
-if [ -z "$SERVER" ]; then
-    SERVER='davidgengenbach.de'
-fi
-
-if [ -z "$DIR" ]; then
-    DIR='/sites/davidgengenbach/informatik-vv/ws1718/assets'
-fi
-
-TMP=$(mktemp)
 DATE=$(date +%d.%m.%y)
-SEMESTER="WiSe 17/18"
 
 cat > constants.json <<EOF
 (function(angular) {
@@ -31,7 +21,7 @@ ftp $SERVER <<EOF
     binary
     cd $DIR
     put modules.json
-    put $TMP constants.js
+    put constants.json constants.js
     bye
 EOF
 else

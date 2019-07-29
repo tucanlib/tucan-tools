@@ -22,6 +22,8 @@ def main():
     import helper
 
     grades = helper.get_grades(False, force_new=True)
+    if not len(grades):
+        return
     os.makedirs(args.grades_path, exist_ok=True)
     last = get_last_grades(args.grades_path)
     current = write_grades(grades, args.grades_path)
@@ -58,7 +60,7 @@ def write_grades(grades, grades_path):
         for grade_data in grades:
             grade = grade_data['grade']
             title = grade_data['title']
-            s = "{}\t{}\n".format(grade, title.encode('utf-8'))
+            s = f"{grade}\t\t{title}\n"
             current += s
             f.write(s)
     return current

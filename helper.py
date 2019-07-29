@@ -78,6 +78,8 @@ def get_avg_from_notenspiegel(notenspiegel):
     return sum(n) / sum(notenspiegel)
 
 def sanitize_title(title):
+    # Remove multiple whitespaces
+    title = re.sub(r'\s{2,}', ' ', title) 
     # Removes the ID from the course and does some sanitation
     title = title.split('<br>')[0].replace('\n', ' ').replace('&nbsp;', ' ').strip()
     return sanitize_title_(title)

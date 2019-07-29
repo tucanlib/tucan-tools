@@ -35,7 +35,7 @@ def get_grades(with_notenspiegel = True):
         tds = grade.select('td')
         # Ignore "faulty" lines (that don't have a notenspiegel for example)
         # TODO: this should be more generic - because not all grades have a notenspiegel (for example the bachelor thesis)
-        if tds is None or len(tds) <= 0 or len(tds[-1].select('a')) <= 0:
+        if tds is None or len(tds) <= 0:# or len(tds[-1].select('a')) <= 0:
             continue
         grade_tds.append(tds)
 
@@ -59,7 +59,6 @@ def get_grades(with_notenspiegel = True):
         # Title
         title = grade_data[0].text.strip()
         sanitized_title = helper.sanitize_title(str(grade_data[0]).split('<br/>')[0].replace('<td>', ''))
-
         # Grade
         grade = get_grade(grade_data[2].text)
         if grade is None:
@@ -74,10 +73,14 @@ def get_grades(with_notenspiegel = True):
 
         # Notenspiegel
         if with_notenspiegel:
+            if len(grade_data[-1].select('a')) <= 0:
+                print(f"No notenspiegel found for {title}")
+                continue
+
             notenspiegel_link = BASE_URL + grade_data[-1].find('a').attrs['href']
             notenspiegel_data = get_notenspiegel(notenspiegel_link)
             if notenspiegel_data is None:
-                print("Error retrieving notenspiegel for: {}".format(sanitized_title))
+                print(f"Error retrieving notenspiegel for: {sanitized_title}")
                 continue
             r['notenspiegel'] = notenspiegel_data
 
