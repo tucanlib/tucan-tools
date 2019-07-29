@@ -60,7 +60,8 @@ def write_grades(grades, grades_path):
         for grade_data in grades:
             grade = grade_data['grade']
             title = grade_data['title']
-            s = f"{grade}\t\t{title}\n"
+            date = grade_data['date']
+            s = f"{grade}\t\t{date}\t\t{title}\n"
             current += s
             f.write(s)
     return current

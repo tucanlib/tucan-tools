@@ -65,10 +65,13 @@ def get_grades(with_notenspiegel = True):
             print('Error retrieving grade for: {}'.format(title))
             continue
 
+        date = str(grade_data[1].text.strip())
+
         r = {
             "originalTitle": title,
             "title": sanitized_title,
-            "grade": grade
+            "grade": grade,
+            "date": date
         }
 
         # Notenspiegel

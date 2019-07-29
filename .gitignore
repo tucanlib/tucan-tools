@@ -7,4 +7,5 @@ __pycache__
 user*
 download-and-compare.sh
 user-credentials.txt
+.ipynb_checkpoints/
 #!nodejs-version/package.json
