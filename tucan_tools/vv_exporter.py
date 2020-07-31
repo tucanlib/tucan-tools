@@ -2,7 +2,7 @@
 
 import re
 import json
-import helper
+from tucan_tools import helper
 import warnings
 from bs4 import BeautifulSoup
 

@@ -1,14 +1,12 @@
-'''
+#!/usr/bin/env python3
+"""
 Retrieves the grades from tucan
-'''
+"""
 
-import mechanicalsoup
-import sys
-import re
-import json
-import helper
+from tucan_tools import helper
 
-def get_grades(with_notenspiegel = True):
+
+def get_grades(with_notenspiegel=True):
     BASE_URL = helper.get_tucan_baseurl()
 
     # Lasciate ogni speranza, oh voi ch'entrate
@@ -21,7 +19,10 @@ def get_grades(with_notenspiegel = True):
     # To show all the grades you have to select an item in a select box.
     # Unfortunately the used library is no headless browser, so it has to be done manually
     def get_link_for_all_ergebnisse(page):
-        (dispatcher, applicationName, programName, sessionNo, menuId, args) = page.soup.select('select#semester')[0].attrs['onchange'].replace('reloadpage.createUrlAndReload(', '').replace(')', '').replace('this.value', '999').replace('\'', '').split(',')
+        (dispatcher, applicationName, programName, sessionNo, menuId, args) = \
+            page.soup.select('select#semester')[0].attrs['onchange'].replace('reloadpage.createUrlAndReload(',
+                                                                             '').replace(
+                ')', '').replace('this.value', '999').replace('\'', '').split(',')
 
         # Straight outta tucan skript.js
         return dispatcher + "?APPNAME=" + applicationName + "&PRGNAME=" + programName + "&ARGUMENTS=-N" + sessionNo + ",-N" + menuId + ',' + args
@@ -35,7 +36,7 @@ def get_grades(with_notenspiegel = True):
         tds = grade.select('td')
         # Ignore "faulty" lines (that don't have a notenspiegel for example)
         # TODO: this should be more generic - because not all grades have a notenspiegel (for example the bachelor thesis)
-        if tds is None or len(tds) <= 0:# or len(tds[-1].select('a')) <= 0:
+        if tds is None or len(tds) <= 0:  # or len(tds[-1].select('a')) <= 0:
             continue
         grade_tds.append(tds)
 
@@ -43,14 +44,15 @@ def get_grades(with_notenspiegel = True):
         html = browser.get(link)
         try:
             # Get all notenspiegel items (the first two tds are discarded)
-            notenspiegel = [0 if x.text.strip() == '---' else int(x.text.strip()) for x in html.soup.select('td.tbdata')[2:]]
+            notenspiegel = [0 if x.text.strip() == '---' else int(x.text.strip()) for x in
+                            html.soup.select('td.tbdata')[2:]]
             return notenspiegel
         except:
             return None
 
     def get_grade(grade_as_string):
         try:
-            return float(grade_as_string.strip().replace(',','.'))
+            return float(grade_as_string.strip().replace(',', '.'))
         except:
             return None
 

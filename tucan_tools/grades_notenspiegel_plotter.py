@@ -5,7 +5,6 @@ Plot the "Notenspiegel" of all courses.
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import re
 import helper
 
 OUTPUT_DIR = 'output'

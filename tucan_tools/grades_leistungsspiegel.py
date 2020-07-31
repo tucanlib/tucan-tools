@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
-'''
+"""
 This script extracts the grades from the 'Leistungsspiegel' page.
 The other script extracts the grades from the 'Prüfungen' page
-'''
+"""
 
+from tucan_tools import helper
 
-import mechanicalsoup
-import sys
-import re
-import json
-import helper
 
 def convert_to_float(x):
     try:
-        return float(x.strip().replace(',','.'))
+        return float(x.strip().replace(',', '.'))
     except:
         return -1.0
+
+
+class Grade(object):
+
+    def __init__(self, title, grade, cp):
+        self.title = title
+        self.grade = grade
+        self.cp = cp
+
 
 def get_grades():
     BASE_URL = helper.get_tucan_baseurl()
@@ -33,11 +38,9 @@ def get_grades():
         title = tds[1].find('a').text.strip()
         cp = convert_to_float(tds[3].text)
         grade = convert_to_float(tds[5].text)
-        grades.append({"title": title, "grade": grade, "cp": cp})
-        if grade != -1:
-            print("CP: {:<6} Grade: {:<4}\t{}".format(cp, grade, title))
-    print()
-    print("CP:", sum([x['cp'] for x in grades if x['cp'] != -1]))
+        grades.append(Grade(title=title, grade=grade, cp=cp))
+    return grades
+
 
 if __name__ == '__main__':
     get_grades()

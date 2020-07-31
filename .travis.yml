@@ -6,7 +6,3 @@ install:
 script:
   # Crawl VV
   - python -u vv_exporter.py
-  - ls -la
-
-after_success:
-  - ./upload.sh

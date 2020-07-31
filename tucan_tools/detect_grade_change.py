@@ -5,13 +5,15 @@ import notify2
 import datetime
 from glob import glob
 from time import time
-import sys
+
+from tucan_tools import helper
+from tucan_tools.helper import cache_path
 
 
 def get_args():
     import argparse
     parser = argparse.ArgumentParser(description='desc')
-    parser.add_argument('--grades_path', type=str, default='grades')
+    parser.add_argument('--grades_path', type=str, default=cache_path + '/grades')
     parser.add_argument('--keep_grades', type=int, default=20)
     args = parser.parse_args()
     return args
@@ -19,7 +21,6 @@ def get_args():
 
 def main():
     args = get_args()
-    import helper
 
     grades = helper.get_grades(False, force_new=True)
     if not len(grades):

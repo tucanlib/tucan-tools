@@ -1,12 +1,8 @@
 # Export your grades
 ... and start comparing yourself to other students. It's a totally sane thing to do.
 
-Outputs the difference of your grades to the grades of the others.
-
 You can also export the Vorlesungszeichnis of the current semester (see below).
 
-
-There is also a script to automatically watch for grade changes, see [agent/README.md](agent/README.md). This is useful when you want to be the first to post on Facebook that some grades are in TuCan :smile:
 
 ```bash
 # Needed: python3 and pip3 or pip.exe or whatever, and:
@@ -67,14 +63,14 @@ The VV exporter crawls the _Anmeldung_ page, not the _VV_ page in TuCan! There a
 ## Screenshots
 
 #### Notenspiegel Plot
-![Notenspiegel](screenshot-plot.png)
+![Notenspiegel](other/screenshot-plot.png)
 
 
 #### Leistungsspiegel Export
 _Ja, das sind meine echten Noten :smile:_
-![Leistungsspiegel](screenshot-leistungsspiegel.png)
+![Leistungsspiegel](other/screenshot-leistungsspiegel.png)
 
 
 #### VV Export
-![VV](screenshot-vv.png)
+![VV](other/screenshot-vv.png)
 

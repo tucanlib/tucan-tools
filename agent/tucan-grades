@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-WORKDIR="/Users/davidgengenbach/Documents/Projekte/tucan-tools"
-cd "$WORKDIR"
-
-/Users/davidgengenbach/anaconda3/bin/python3 grades_extractor.py --without-notenspiegel --force-new
