@@ -6,14 +6,15 @@ You can also export the Vorlesungszeichnis of the current semester (see below).
 
 ```bash
 # Needed: python3 and pip3 or pip.exe or whatever, and:
-pip3 install -r requirements.txt
+pip3 install git+https://github.com/tucanlib/tucan-tools.git@rework
 
 # To export the grades:
 # You will get prompted for your username/password
-# or you can create a file called 'user-credentials.txt' with two lines in it:
-# your username and password (trailing whitespace etc. will be stripped)
-python3 grades_extractor.py
-# (grades.json)
+# or you can create a file called '~/.config/tucan_tools/credentials.json' with a "username" and "password"
+
+tucan_tools_grades_extractor.py
+
+# (This will print your grades and save them to ~/.cache/tucan_tools/grades.json)
 
 # To plot the notenspiegel:
 # If there is an error that you need 'tkinter' you have to install 'python-pmw' (Arch Linux)
@@ -31,7 +32,9 @@ If there are changes, it notifies you using the [notify2](https://notify2.readth
 
 Since the `detect_grade_change.py` executable does no automatic scheduling, you may add an entry to your crontab (or create a service):
 ```cron
-0 * * * * cd FOLDER_WHERE_THE_TUCAN_TOOLS_ARE/tucan-tools && PATH_TO_YOUR_PYTHON_EXECUTABLE/python3 detect_grade_change.py
+0 * * * * export DISPLAY=:0; /home/dgengenbach/anaconda3/bin/tucan_tools_detect_grade_change.py 2>&1 >> /home/dgengenbach/Desktop/grades.log
+
+# Cron logs with `tail -f /var/log/syslog`
 ```
 **Note** If you use a version manager, like anaconda or virtualenv, you have to manually define the executable path. Otherwise you can remove the `PATH_TO_YOUR_PYTHON_EXECUTABLE/` part. 
 

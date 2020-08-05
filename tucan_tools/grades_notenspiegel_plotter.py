@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-'''
+"""
 Plot the "Notenspiegel" of all courses.
-'''
-import numpy as np
-import matplotlib.pyplot as plt
+"""
 import os
-import helper
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from tucan_tools import helper
 
 OUTPUT_DIR = 'output'
 
@@ -15,18 +17,21 @@ available_grades = helper.get_available_grades()
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
+
 def autolabel_bars(rects):
     for rect in rects:
         height = rect.get_height()
-        plt.text(rect.get_x() + rect.get_width()/2., 1.02 * height,
-                '%d' % int(height),
-                ha='center', va='bottom')
+        plt.text(rect.get_x() + rect.get_width() / 2., 1.02 * height,
+                 '%d' % int(height),
+                 ha='center', va='bottom')
+
 
 def get_notenspiegel_index(grade):
     for (index, grade_) in enumerate(available_grades):
         if grade == grade_:
             return index
     return -1
+
 
 def plot_notenspiegel(title, notenspiegel):
     plt.cla()
@@ -61,6 +66,7 @@ def plot_notenspiegel(title, notenspiegel):
     plt.grid(False)
     plt.title(title, loc='left')
     plt.savefig('{}/{}.png'.format(OUTPUT_DIR, sanitized_title))
+
 
 for grade in grades:
     plot_notenspiegel(grade['title'], grade['notenspiegel'])

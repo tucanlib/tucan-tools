@@ -41,6 +41,3 @@ def get_grades():
         grades.append(Grade(title=title, grade=grade, cp=cp))
     return grades
 
-
-if __name__ == '__main__':
-    get_grades()

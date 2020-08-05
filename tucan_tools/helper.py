@@ -9,7 +9,7 @@ import mechanicalsoup
 from tucan_tools import grades_exporter
 
 home = expanduser("~")
-cache_path = os.path.join(home, '.cache', 'tucan-tools')
+cache_path = os.path.join(home, '.cache', 'tucan_tools')
 config_path = os.path.join(home, '.config', 'tucan_tools')
 
 os.makedirs(cache_path, exist_ok=True)

@@ -5,4 +5,4 @@ install:
   - pip install -r requirements.txt
 script:
   # Crawl VV
-  - python -u vv_exporter.py
+  - python -u tucan_tools_vv_exporter.py

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import os
-import notify2
 import datetime
 from glob import glob
 from time import time
+
+from pynotifier import Notification
 
 from tucan_tools import helper
 from tucan_tools.helper import cache_path
@@ -29,8 +30,11 @@ def main():
     last = get_last_grades(args.grades_path)
     current = write_grades(grades, args.grades_path)
     diff = [x for x in current.splitlines() if x not in last.splitlines()]
+
+    diff = '\n'.join(diff).replace('&', '&amp;')
+
     if len(diff):
-        show_notification('TuCan Grades changed', '\n'.join(diff))
+        show_notification('TuCan Grades changed', diff)
 
     files = sorted(glob(args.grades_path + '/*.txt'))
     if len(files) > args.keep_grades:
@@ -69,9 +73,7 @@ def write_grades(grades, grades_path):
 
 
 def show_notification(title, description):
-    notify2.init('TuCan Grades')
-    n = notify2.Notification(title, description)
-    n.show()
+    Notification(title, description, duration=100, urgency=Notification.URGENCY_CRITICAL).send()
 
 
 if __name__ == '__main__':

@@ -17,9 +17,14 @@ setuptools.setup(
         'MechanicalSoup>=0.6.0',
         'notify2>=0.3.1',
         'matplotlib>=3.1.3',
-        'dbus-python>=1.2.16'
+        'dbus-python>=1.2.16',
+        'py-notifier>=0.1.0'
     ],
-    scripts=['tucan_tools/grades_extractor.py'],
+    scripts=[
+        'tucan_tools/tucan_tools_grades_extractor.py',
+        'tucan_tools/tucan_tools_detect_grade_change.py',
+        'tucan_tools/tucan_tools_vv_exporter.py'
+    ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3",
