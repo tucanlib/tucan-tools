@@ -22,6 +22,7 @@ BLACKLIST = (
     'Module des Sprachenzentrums mit Fachprüfungen',
     'Fachübergreifende Veranstaltungen',     # PO 2009
     'Fachübergreifende Lehrveranstaltungen', # PO 2015
+    'Studium Generale',                      # PO 2023
     'Veranstaltung'
 )
 
