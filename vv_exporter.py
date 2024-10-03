@@ -23,7 +23,10 @@ BLACKLIST = (
     'Fachübergreifende Veranstaltungen',     # PO 2009
     'Fachübergreifende Lehrveranstaltungen', # PO 2015
     'Studium Generale',                      # PO 2023
-    'Veranstaltung'
+    'Veranstaltung',
+    'Zusätzliche Leistungen nach §20(2) APB',
+    'Vorgezogene Masterleistungen nach §20(3) APB',
+    'Weitere Veranstaltungen',
 )
 
 BASE_URL = helper.get_tucan_baseurl()
