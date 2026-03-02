@@ -5,6 +5,8 @@ import argparse
 import mechanicalsoup
 import getpass
 import re
+from playwright.sync_api import sync_playwright
+
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 GRADES_JSON = os.path.join(current_path, 'grades.json')
@@ -108,28 +110,37 @@ def log_into_tucan_():
     return log_into_tucan(credentials['username'], credentials['password'])
 
 def log_into_tucan(username, password, browser=mechanicalsoup.Browser(soup_config={"features":"html.parser"})):
-    SELECTORS = {
-        "LoginUser": '#field_user',
-        "LoginPass": '#field_pass',
-        "LoginForm": '#cn_loginForm'
-    }
+    """log into tucan
 
-    def get_redirection_link(page):
-        return BASE_URL + page.soup.select('a')[2].attrs['href']
+    This originally used username and password
+    with the move to the single sign on portal
+    with mandatory 2FA this no longer possible.
+    So instead we use playwright to log in and
+    then transfer the cookies to mechanicalsoup for further use.
+    """
+    TARGET_PATTERN = (
+        "https://www.tucan.tu-darmstadt.de/scripts/mgrqispi.dll"
+        "?APPNAME=CampusNet&PRGNAME=MLSSTART&ARGUMENTS=**"
+    )
+
+    with sync_playwright() as p:
+        playwright_browser = p.firefox.launch(headless=False)
+        context = playwright_browser.new_context()
+        page = context.new_page()
+
+        # Start TUCaN login flow
+        page.goto("https://www.tucan.tu-darmstadt.de")
+
+        # Wait until redirected to the expected final URL pattern
+        page.wait_for_url(TARGET_PATTERN, timeout=180000)  # 3 minutes
+
+        start_url = page.url
+        cookies = context.cookies()
+        playwright_browser.close()
+
 
     browser = mechanicalsoup.Browser(soup_config={"features":"html.parser"})
-    login_page = browser.get(BASE_URL)
-    # HTML redirects, because why not
-    login_page = browser.get(get_redirection_link(login_page))
-    login_page = browser.get(get_redirection_link(login_page))
-    login_form = login_page.soup.select(SELECTORS['LoginForm'])[0]
+    browser.session.cookies.update({cookie['name']: cookie['value'] for cookie in cookies})
+    start_page = browser.get(start_url)
 
-    login_form.select(SELECTORS['LoginUser'])[0]['value'] = username
-    login_form.select(SELECTORS['LoginPass'])[0]['value'] = password
-
-    login_page = browser.submit(login_form, login_page.url)
-    redirected_url = "=".join(login_page.headers['REFRESH'].split('=')[1:])
-
-    start_page = browser.get(BASE_URL + redirected_url)
-    start_page = browser.get(get_redirection_link(start_page))
     return (browser, start_page)
